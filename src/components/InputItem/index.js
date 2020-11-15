@@ -27,7 +27,7 @@ const InputItem = (props) => {
             }, 1000); //1秒改变一次
         }
         return () => clearInterval(interval);
-    },[timing]) //数组[],里面任何值发生改变就会执行前面的function
+    },[timing, props.countDown]) //数组[],里面任何值发生改变就会执行前面的function
 
     if (name === 'captcha') {
         return(
