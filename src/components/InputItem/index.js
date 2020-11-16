@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from 'react';
+import { useDispatch } from 'redux-react-hook';
 import { Input, Form, Button, Row, Col, message } from 'antd';
-import styles from './index.module.less'
+import { getCaptcha } from '../../actions/register';
+import styles from './index.module.less';
 
 const InputItem = (props) => {
+    const dispatch = useDispatch();
     const {name, rules, ...rest} = props
     const [timing, setTiming] = useState(false); //是否在倒计时
     const [count, setCount] = useState(props.countDown || 60);//设置计时器,倒计时秒数
 
     const handleClickCaptcha = () => {
         message.success('got the captcha 1234');
+        dispatch(getCaptcha());
         setTiming(true);
     }
 
