@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'redux-react-hook';
 import { Form, Popover, Progress, Select, Row, Col } from 'antd'
 import InputItem from '../../components/InputItem';
+import { getCaptcha } from '../../actions/register';
 import styles from './index.module.less';
 import SubmitButton from '../../components/SubmitButton'
 
@@ -32,6 +34,7 @@ const passwordProgressMap = {
 }
 
 const Register = () => {
+    const dispatch = useDispatch();
     const [visible, setVisible] = useState(false);
     const [popover, setPopover] = useState(false);
     const [prefix, setPrefix] = useState('001');
@@ -88,6 +91,14 @@ const Register = () => {
             </div>
         )
     }
+
+    const handleClickCaptcha = () => {
+        form.validateFields(['username', 'email', 'password'])
+            .then(() => {
+                // console.log(form.getFieldsValue(['username', 'email', 'password']));
+                dispatch(getCaptcha(form.getFieldsValue(['username', 'email', 'password'])))
+            })
+    }
     
     return(
         <div className={styles.registerContainer}> 
@@ -96,9 +107,19 @@ const Register = () => {
                     form={form}
                     onFinish={handleFinish}
                 >
-
                     <InputItem 
-                        name="mail"
+                        name="username"
+                        placeholder="username" 
+                        size="large"
+                        rules={[
+                            {
+                                required:true,
+                                message: 'Please input username'
+                            }
+                        ]}
+                    />
+                    <InputItem 
+                        name="email"
                         placeholder="email address" 
                         size="large"
                         rules={[
@@ -114,17 +135,19 @@ const Register = () => {
                     />
                     <Popover
                         content={
-                            <div>
-                                { passwordStatusMap[getPasswordStatus()]}
-                                { renderPasswordProgress() }
+                            visible && (
                                 <div>
-                                    Pleae input at least 6 digit. Do not use weak password.
+                                    { passwordStatusMap[getPasswordStatus()]}
+                                    { renderPasswordProgress() }
+                                    <div>
+                                        Pleae input at least 6 digit. Do not use weak password.
+                                    </div>
                                 </div>
-                            </div>
+                            )
                         } 
                         overlayStyle={{width: 240}}
                         placement="right"
-                        visible={true}
+                        visible={visible}
                     >
                         <InputItem 
                             name="password"
@@ -187,21 +210,6 @@ const Register = () => {
                             />
                         </Col>
                     </Row>
-                    <InputItem 
-                        name="mobile"
-                        placeholder="Phone Number" 
-                        size="large"
-                        rules={[
-                            {
-                                required:true,
-                                message: 'Please input phone number'
-                            },
-                            {
-                                pattern: /^\d{10}$/,
-                                message: 'Wrong Format for phone number'
-                            }
-                        ]}
-                    />
                     <InputItem
                         name="captcha"
                         size="large"
@@ -212,6 +220,7 @@ const Register = () => {
                             }
                         ]}
                         placeholder='captcha'
+                        onClick={handleClickCaptcha}
                     />
                     <Row justify="space-between" align="middle">
                         <Col span={8}>
