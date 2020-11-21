@@ -1,7 +1,9 @@
 import axios from 'axios';
+import * as interceptors from './interceptors'
 
-function getAxiosInstance() {
+function getAxiosInstance(options) {
     const instance = axios.create();
+    interceptors.install(instance, options);
     return instance;
 }
 

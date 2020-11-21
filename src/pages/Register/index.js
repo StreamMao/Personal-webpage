@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'redux-react-hook';
 import { Form, Popover, Progress, Select, Row, Col } from 'antd'
 import InputItem from '../../components/InputItem';
-import { getCaptcha } from '../../actions/register';
+import { getCaptcha, register } from '../../actions/account';
 import styles from './index.module.less';
 import SubmitButton from '../../components/SubmitButton'
 
@@ -40,7 +40,7 @@ const Register = () => {
     const [prefix, setPrefix] = useState('001');
     const [form]= Form.useForm();
     const handleFinish = (values) => {
-        console.log(values);
+        dispatch(register(values));
     }
 
     const checkConfirm = (_, value) => {
